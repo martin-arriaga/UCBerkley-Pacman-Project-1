@@ -296,7 +296,8 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
-        "State representation that encodes all the information necessary to detect whether all corners have been reached: 4 corners four values False== have not touched "
+        "State representation that encodes all the information necessary to detect whether all corners have been reached: "
+        "4 corners four values False== have not touched "
         "True == have touched "
         corners_visited = [False] * 4
         return (self.startingPosition, tuple(corners_visited))
@@ -327,18 +328,7 @@ class CornersProblem(search.SearchProblem):
             is the incremental cost of expanding to that successor
         """
         """
-        I had some problems implementing the get successor function, the main problem was that 
-        since my encoded state started with four false values each representing one corner, when i found a corner 
-        i had to know the index of which corner i found, i uploaded the portion of the code and CGPT returned:
-        I see you're trying to implement the logic for generating successor states and updating the list of visited corners in your search algorithm. However, there's a small issue with how you're identifying the index of the corner and modifying the list of visited corners.
-
-        Problem in the Code:
-        Incorrect find_corner Assignment: You're using enumerate(self.corners) to loop through self.corners, but you're assigning the corner variable as a tuple (index, corner). This means that corner will be a tuple (index, corner), so when you compare it to child, it will compare a tuple of two values instead of just the coordinates.
-        Incorrect Index for find_corner: After finding the corner, you're assigning find_corner to the tuple (index, corner) which will be an entire tuple, not just the index.
-        Fixing the Code:
-        You should modify the loop to correctly check for the corner and extract just the index (not the whole tuple). Here's how you can fix it:
-
-        thats how i was able to make it work, also it made a suggestion all i had to do was call this function:
+        
          
         alternative solution was not initialize starting tuple with four false values, just an empty list and add true value when a corner is found 
         and then check size of list == 4 for isGoalState
@@ -403,35 +393,10 @@ def cornersHeuristic(state: Any, problem: CornersProblem):
     """
     corners = problem.corners # These are the corner coordinates
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
-    """To start this problem I made the following prompt to CGPT: I need to come up with a heuristic to a corners problem 
-    this was the response:
-    For the Corners Problem in the context of search algorithms (commonly found in AI pathfinding problems like Pac-Man), you need a heuristic that estimates the remaining cost to reach the goal from a given state, based on the current state and the remaining corners to visit.
-
-    Problem Recap:
-    In the Corners Problem, Pac-Man (or an agent) needs to visit all the corners in a maze, and the goal is to find the shortest path that visits all corners.
-
-    Key Aspects of the Problem:
-    State: The current position of Pac-Man and a set of visited corners (usually represented as a tuple).
-    Goal: Visit all four corners in the maze.
-    The heuristic needs to estimate the remaining distance from the current state (position + visited corners) to the goal state (where all corners are visited).
-
-    A Good Heuristic for the Corners Problem:
-    A useful heuristic should guide the search algorithm towards the corners that haven't been visited yet while also considering the maze layout. Here's a good approach:
-
-    Manhattan Distance:
-    Use the Manhattan distance between the current position and each unvisited corner. This is a good heuristic because it reflects the actual grid-based distance between two points.
-    For each unvisited corner, you will compute the Manhattan distance from Pac-Man's current position to the corner. This will give you an estimate of how far Pac-Man is from each corner.
-    Consider the Closest Corner:
-    After calculating the Manhattan distance for each unvisited corner, choose the closest unvisited corner as part of your heuristic. This minimizes the distance that Pac-Man must travel to visit the remaining corners.
-    Estimate the Cost for the Remaining Corners:
-    The heuristic should consider that Pac-Man will have to visit all remaining corners, so you should sum up the distances to visit the closest corner, then the next closest, and so on. This way, the heuristic will give an idea of how long it will take to visit all the remaining corners.
-    Steps to Implement the Heuristic:
-    Find the unvisited corners: This is done by checking which corners haven't been visited yet based on the current state.
-    Calculate Manhattan distance to each unvisited corner.
-    Choose the closest corner (minimum Manhattan distance).
-    Sum the distances to the closest corners to estimate the total distance to the goal state.
+    """
     
-    f(n) = c(n) + h(n), we need to return h(n) which is an approximation to the goal, the goal in this case is all 4 corners of the maze have to be visited 
+    f(n) = c(n) + h(n), we need to return h(n) which is an approximation to the goal,
+    the goal in this case is all 4 corners of the maze have to be visited 
     -it should always underestimate the cost of the true goal 
     - idea 
             calculate the straight line distance from the current state to the closest corner, from that corner to the next closest corner 
@@ -565,16 +530,18 @@ def foodHeuristic(state: Tuple[Tuple, List[List]], problem: FoodSearchProblem):
         ****this was the implementation for that idea but it did not pass the admissible heuristic test****
         
     """
-    """Second idea: running sum of the distance between the remaining food and current position -> avg
+    """
+    Second idea: 
+        running sum of the distance between the remaining food and current position -> avg
         food_list = foodGrid.asList()  # list of coordinates that contain food
-    total_manhattan_distance = 0
-    if problem.isGoalState(state):# make sure goal state returns 0 for heuristic function
-        return 0
-    for food in food_list:
+        total_manhattan_distance = 0
+        if problem.isGoalState(state):# make sure goal state returns 0 for heuristic function
+            return 0
+        for food in food_list:
         total_manhattan_distance += util.manhattanDistance(position, food)
 
-    if total_manhattan_distance / len(food_list) < 0: # make sure heuristic function is non negative
-        return exit(0)
+        if total_manhattan_distance / len(food_list) < 0: # make sure heuristic function is non negative
+            return exit(0)
         
         I ended up using this idea
     """

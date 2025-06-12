@@ -87,24 +87,6 @@ def depthFirstSearch(problem: SearchProblem):
     print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
-    "*** YOUR CODE HERE ***"
-    "I got stuck here in DFS where I was able to pass all the tests except for the second one and so I uploaded my algorithm to ChatGPT"
-    "and asked it if it spotted anything wrong with it"
-    """
-    This was the response: 
-    Potential Issues or Points to Note:
-    Redundant visited List:
-    You're maintaining the visited list manually to avoid revisiting states. While this works fine in DFS, it's important to note that DFS can be inefficient in very deep or infinite search spaces. You may want to consider using a set for visited rather than a list for faster membership checking, as the in operator in lists is O(n) while it is O(1) for sets.
-    Action List Update:
-    When pushing a child state to the stack, the path (path_upto_child + [action]) is updated and passed along. This is fine for DFS, but if the state space is large, this may result in a lot of list copying. You might want to consider using an iterative approach or a generator in some cases.
-    Returning the Path:
-    When the goal is reached, you return the path (path_upto_child + [action]). Make sure that the function this code belongs to is returning the correct value at the right time (i.e., when the goal state is found).
-
-    *** from this respones i was able to correct my algortihm, the main problem was that when i found my goal state i was sending path_upto_child + [action] and i should have just been returning path_upto_child***
-    *** also i was checking if the child was a goal state and returning the path at the time, that meant that I never actually traveled to the child node. If one of the child node was a goal. i.e the second test, the alg would terminate early 
-    I moved the problem.isGoal() to check the state when i pop the state, meaning i actually traveled to the node and the algorithm did not end prematurely.
-
-    """
 
     fringe = util.Stack()
     list_of_paths_taken = []
